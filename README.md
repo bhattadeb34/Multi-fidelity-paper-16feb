@@ -49,5 +49,8 @@ This repository contains the publication-quality codebase for the analysis of Pr
 - **Automated Selection**: Variance thresholding, correlation filtering, and recursive feature elimination.
 - **Robust Evaluation**: 5-fold cross-validation with "1-std rule" for parsimonious model selection.
 - **Visualization**: Extensive plotting including SHAP analysis, error distribution, and learning curves.
-- **Feature Caching**: Automatically saves computed features to `data/feature_matrix_full.pkl` for fast re-runs. To force recomputation, set `RECOMPUTE_FEATURES = True` in `scripts/run_analysis.py`.
+- **Feature Caching**: Features are automatically cached in `data/feature_matrix_full.pkl`. To force recomputation (e.g., if data changes), run with the `--recompute` flag:
+  ```bash
+  python scripts/run_analysis.py --recompute
+  ```
 

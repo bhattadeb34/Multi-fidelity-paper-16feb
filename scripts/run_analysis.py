@@ -34,6 +34,12 @@ def main():
     print('COMPREHENSIVE PA ANALYSIS - PUBLICATION PIPELINE')
     print('=' * 60)
 
+
+    import argparse
+    parser = argparse.ArgumentParser(description='Run Comprehensive Proton Affinity Analysis Pipeline')
+    parser.add_argument('--recompute', action='store_true', help='Force recomputation of features (ignore cache)')
+    args = parser.parse_args()
+
     # 1. Load Data
     df, d_exp, y_exp, y_pm7 = load_data()
     y_delta = y_exp - y_pm7
@@ -42,9 +48,8 @@ def main():
     # 2. Build Features
     # Note: compute_3d=True computes descriptors on the fly (slow). 
     # Set to False if not needed or reuse cache if implemented.
-    RECOMPUTE_FEATURES = False  # Set to True to force feature recalculation
     X_all, names_all, sources_all, initial_counts = build_feature_matrix(
-        df, d_exp, compute_3d=True, recompute=RECOMPUTE_FEATURES
+        df, d_exp, compute_3d=True, recompute=args.recompute
     )
 
     # 3. Feature Selection
