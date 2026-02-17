@@ -195,11 +195,26 @@ def compute_3d_descriptors(smiles_list: List[str]) -> Tuple[np.ndarray, List[str
     return X_3d, names
 
 
-def build_feature_matrix(df: pd.DataFrame, d_exp: pd.DataFrame, compute_3d: bool = True):
+def build_feature_matrix(df: pd.DataFrame, d_exp: pd.DataFrame, compute_3d: bool = True, recompute: bool = False):
     """Build comprehensive feature matrix."""
     print('\n' + '=' * 60)
     print('FEATURE ENGINEERING')
     print('=' * 60)
+    
+    # Check cache
+    cache_file = os.path.join(DATA_DIR, 'feature_matrix_full.pkl')
+    if not recompute and os.path.exists(cache_file):
+        print(f'Loading cached features from {cache_file}...')
+        try:
+             # Load pickle
+             import pickle
+             with open(cache_file, 'rb') as f:
+                 data = pickle.load(f)
+             print('  Successfully loaded cached features.')
+             return data['X'], data['names'], data['sources'], data['counts']
+        except Exception as e:
+            print(f'  Error loading cache: {e}. Recomputing...')
+
     all_X = []
     all_names = []
     all_sources = []
@@ -289,5 +304,18 @@ def build_feature_matrix(df: pd.DataFrame, d_exp: pd.DataFrame, compute_3d: bool
     for source, count in initial_counts.items():
         print(f'  {source}: {count} features')
     print(f'  TOTAL: {len(all_names)} features')
+
+    print(f'  TOTAL: {len(all_names)} features')
+
+    # Save cache
+    print(f'Saving features to {cache_file}...')
+    import pickle
+    with open(cache_file, 'wb') as f:
+        pickle.dump({
+            'X': X_all,
+            'names': all_names,
+            'sources': all_sources,
+            'counts': dict(initial_counts)
+        }, f)
 
     return X_all, all_names, all_sources, dict(initial_counts)

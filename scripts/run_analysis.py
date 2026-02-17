@@ -42,7 +42,10 @@ def main():
     # 2. Build Features
     # Note: compute_3d=True computes descriptors on the fly (slow). 
     # Set to False if not needed or reuse cache if implemented.
-    X_all, names_all, sources_all, initial_counts = build_feature_matrix(df, d_exp, compute_3d=True)
+    RECOMPUTE_FEATURES = False  # Set to True to force feature recalculation
+    X_all, names_all, sources_all, initial_counts = build_feature_matrix(
+        df, d_exp, compute_3d=True, recompute=RECOMPUTE_FEATURES
+    )
 
     # 3. Feature Selection
     X_sel, names_sel, sources_sel, selection_results = trim_features(X_all, names_all, sources_all, y_delta)
